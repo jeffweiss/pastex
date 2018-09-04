@@ -8,13 +8,24 @@ defmodule PastexWeb.Schema do
   query do
     field :health, :string do
       resolve(fn _, _, _ ->
-        IO.puts "Executing Health"
         {:ok, "up"}
       end)
     end
 
-    field :pastes, list_of(:paste) do
-      resolve &ContentResolver.list_pastes/3
+    import_fields :content_queries
+  end
+
+  mutation do
+    import_fields :content_mutations
+  end
+
+  subscription do
+    field :paste_created, :paste do
+      config fn _, _ ->
+        {:ok, topic: "*"}
+      end
+
+      trigger [:create_paste], topic: fn _paste -> "*" end
     end
   end
 

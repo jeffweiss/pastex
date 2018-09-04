@@ -23,4 +23,13 @@ defmodule PastexWeb.ContentResolver do
         {:ok, file.body}
     end
   end
+
+  def create_paste(parent, %{input: input}, context) do
+    case Content.create_paste(input) do
+      {:ok, paste} ->
+        {:ok, paste}
+      {:error, _} ->
+        {:error, "didn't work"}
+    end
+  end
 end
