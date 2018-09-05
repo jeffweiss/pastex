@@ -8,6 +8,10 @@ defmodule PastexWeb.Schema.ContentTypes do
     field :name, non_null(:string)
     field :description, :string
 
+    field :author, :user do
+      resolve &ContentResolver.get_user/3
+    end
+
     field :files, non_null(list_of(:file)) do
       resolve &ContentResolver.get_files/3
     end
