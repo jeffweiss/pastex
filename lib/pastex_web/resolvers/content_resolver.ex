@@ -3,8 +3,10 @@ defmodule PastexWeb.ContentResolver do
 
   ## Queries
 
-  def list_pastes(_, _, %{context: context}) do
-    {:ok, Content.list_pastes(context[:current_user])}
+  def list_pastes(_, args, %{context: context}) do
+    context[:current_user]
+    |> Content.query_pastes
+    |> Absinthe.Relay.Connection.from_query(&Pastex.Repo.all/1, args)
   end
 
   def get_files(paste, _, _) do
@@ -42,7 +44,7 @@ defmodule PastexWeb.ContentResolver do
   end
 
   def format_body(file, arguments, _) do
-    case arguments |> IO.inspect() do
+    case arguments do
       %{style: :formatted} ->
         {:ok, Code.format_string!(file.body)}
 

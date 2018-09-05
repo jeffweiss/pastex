@@ -1,5 +1,6 @@
 defmodule PastexWeb.Schema do
   use Absinthe.Schema
+  use Absinthe.Relay.Schema, :modern
 
   import_types PastexWeb.Schema.ContentTypes
   import_types PastexWeb.Schema.IdentityTypes
@@ -45,6 +46,10 @@ defmodule PastexWeb.Schema do
 
   def middleware(middleware, _field, _object) do
     # [PastexWeb.Middleware.AuthGet | middleware]
-    middleware ++ [PastexWeb.Middleware.AuthGet]
+    tracing_middleware() ++ middleware ++ [PastexWeb.Middleware.AuthGet]
+  end
+
+  defp tracing_middleware() do
+    [ApolloTracing.Middleware.Tracing]
   end
 end

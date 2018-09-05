@@ -14,12 +14,10 @@ defmodule PastexWeb.Middleware.AuthGet do
     else
       auth_result = Absinthe.Type.meta(schema_node, :auth)
       error_or_nil = if auth_result == :use_nil do
-        # {:error, "unauthorized"}
         {:ok, nil}
       else
         {:error, "unauthorized"}
       end
-      IO.inspect("error_or_nil: #{inspect error_or_nil}")
       Absinthe.Resolution.put_result(resolution, error_or_nil)
     end
   end

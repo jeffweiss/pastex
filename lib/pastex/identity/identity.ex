@@ -9,9 +9,9 @@ defmodule Pastex.Identity do
   alias Pastex.Identity.User
   alias Comeonin.Ecto.Password
 
-  def authorized?(%User{id: id}, :email, %User{id: id}), do: true
+  def authorized?(%User{id: id}, _, %User{id: id}), do: true
   def authorized?(%User{}, :email, _), do: false
-  def authorized?(%User{}, :name, _), do: false
+  # def authorized?(%User{}, :name, _), do: false
   def authorized?(_, _, _), do: true
 
 
@@ -52,7 +52,10 @@ defmodule Pastex.Identity do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user(id), do: Repo.get(User, id)
+  def get_user(id) do
+    Process.sleep(20)
+    Repo.get(User, id)
+  end
 
   @doc """
   Creates a user.
