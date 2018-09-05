@@ -5,9 +5,8 @@ defmodule Pastex.Content.Paste do
   schema "pastes" do
     field :description, :string
     field :name, :string
+    field :author_id, :id
     field :visibility, :string, null: false, default: "public"
-
-    belongs_to :author, Pastex.Identity.User
 
     has_many :files, Pastex.Content.File
 

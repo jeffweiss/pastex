@@ -22,8 +22,18 @@ defmodule PastexWeb.Schema do
 
   subscription do
     field :paste_created, :paste do
-      config fn _, _ ->
-        {:ok, topic: "*"}
+      arg :visibility, :string, default_value: "public"
+
+      config fn %{visibility: visibility}, %{context: context} ->
+        case {visibility, context} do
+          {"public", _} ->
+            {:ok, topic: "public"}
+
+          {"private", %{current_user: %{id: user_id}}} ->
+            {:ok, topic: "private:#{user_id}"}
+          _ ->
+            {:error, "unauthorized"}
+        end
       end
 
       trigger :create_paste,
@@ -31,5 +41,10 @@ defmodule PastexWeb.Schema do
           "*"
         end
     end
+  end
+
+  def middleware(middleware, _field, _object) do
+    # [PastexWeb.Middleware.AuthGet | middleware]
+    middleware ++ [PastexWeb.Middleware.AuthGet]
   end
 end

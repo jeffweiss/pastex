@@ -9,6 +9,12 @@ defmodule Pastex.Identity do
   alias Pastex.Identity.User
   alias Comeonin.Ecto.Password
 
+  def authorized?(%User{id: id}, :email, %User{id: id}), do: true
+  def authorized?(%User{}, :email, _), do: false
+  def authorized?(%User{}, :name, _), do: false
+  def authorized?(_, _, _), do: true
+
+
   def authenticate(email, password) do
     user = Repo.get_by(User, email: email)
 

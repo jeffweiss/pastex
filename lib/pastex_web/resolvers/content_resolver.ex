@@ -16,18 +16,9 @@ defmodule PastexWeb.ContentResolver do
     {:ok, files}
   end
 
-  def get_user(paste, _, _) do
-    author =
-      case paste.author_id do
-        nil ->
-          nil
-        author_id ->
-          paste
-          |> Ecto.assoc(:author)
-          |> Pastex.Repo.get(paste.author_id)
-      end
-
-    {:ok, author}
+  def get_user(%{author_id: nil}, _, _), do: {:ok, nil}
+  def get_user(%{author_id: author_id}, _, _) do
+    {:ok, Pastex.Identity.get_user(author_id)}
   end
 
   ## Mutations
